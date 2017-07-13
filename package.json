@@ -1,8 +1,8 @@
 {
   "name": "lifeship",
   "version": "1.0.0",
-  "description": "A Boilerplate application for building REST APIs using express, mongoose in ES6 with code coverage",
-  "author": "Kunal Kapadia <kunalkapadia12@gmail.com>",
+  "description": "Life ship API server",
+  "author": "webcat12345",
   "main": "index.js",
   "private": false,
   "engines": {
