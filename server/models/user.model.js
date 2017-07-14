@@ -1,7 +1,10 @@
 import Promise from 'bluebird';
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import APIError from '../helpers/APIError';
+
+const saltRounds = 10;
 
 /**
  * User Schema
@@ -9,12 +12,15 @@ import APIError from '../helpers/APIError';
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
+    unique: true,
+    lowercase: true,
     required: true
   },
-  mobileNumber: {
-    type: String,
-    required: true,
-    match: [/^[1-9][0-9]{9}$/, 'The value of path {PATH} ({VALUE}) is not a valid mobile number.']
+  hashed_password: {
+    type: String
+  },
+  salt: {
+    type: String
   },
   createdAt: {
     type: Date,
@@ -30,11 +36,37 @@ const UserSchema = new mongoose.Schema({
  */
 
 /**
+ * Virtuals
+ */
+UserSchema.virtual('password')
+  .set(function (password) {
+    this._password = password;
+    this.salt = this.makeSalt();
+    this.hashed_password = this.hashPassword(password, this.salt);
+  })
+  .get(function () {
+    return this._password;
+  });
+/**
  * Methods
  */
 UserSchema.method({
-});
+  /**
+   * Generate password hash salt
+   */
+  makeSalt() {
+    return bcrypt.genSaltSync(saltRounds);
+  },
 
+  /**
+   * Hash plain text password
+   * @param password
+   * @param salt
+   */
+  hashPassword(password, salt) {
+    return bcrypt.hashSync(password, salt);
+  }
+});
 /**
  * Statics
  */

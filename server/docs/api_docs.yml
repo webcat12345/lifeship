@@ -69,7 +69,7 @@ definitions:
     properties:
       username:
         type: string
-      mobileNumber:
+      password:
         type: string
   LoginInfo:
     type: object
