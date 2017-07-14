@@ -1,0 +1,90 @@
+---
+swagger: '1.0'
+info:
+  description: 'Move your app forward with the Life Ship API'
+  version: '1.0.0'
+  title: 'Life Ship API'
+host: 'localhost:4040'
+basePath: '/api'
+schemes:
+- 'http'
+produces:
+- 'application/json'
+paths:
+  /auth/login:
+    post:
+      tags:
+      - 'Authentication Controller'
+      summary: 'Login User'
+      operationId: 'postLogin'
+      parameters:
+      - name: LoginInfo
+        in: body
+        required: true
+        type: LoginInfo
+        schema:
+          $ref: '#/definitions/LoginInfo'
+      responses:
+        200:
+          description: 'JWT token'
+          schema:
+        default:
+          description: 'Unexpected error'
+          schema:
+            $ref: '#/definitions/Error'
+      x-swagger-router-controller: auth
+  /users:
+    get:
+      tags:
+      - 'User Controller'
+      summary: 'Get Registered Users'
+      operationId: 'getUsers'
+      responses:
+        200:
+          description: 'Array of users'
+        default:
+          schema:
+            $ref: '#/definitions/Error'
+      x-swagger-router-controller: user
+    post:
+      tags:
+      - 'User Controller'
+      parameters:
+      - name: User
+        in: body
+        required: true
+        type: User
+        schema:
+          $ref: '#/definitions/User'
+      responses:
+        200:
+          schema:
+        default:
+          schema:
+            $ref: '#/definitions/Error'
+      x-swagger-router-controller: user
+definitions:
+  User:
+    type: object
+    properties:
+      username:
+        type: string
+      mobileNumber:
+        type: string
+  LoginInfo:
+    type: object
+    properties:
+      username:
+        type: string
+      password:
+        type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
